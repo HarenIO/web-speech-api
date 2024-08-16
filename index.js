@@ -1,39 +1,62 @@
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-const SpeechGrammarList =
-  window.SpeechGrammarList || window.webkitSpeechGrammarList;
-const SpeechRecognitionEvent =
-  window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
-
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
 
 recognition.lang = 'en-US';
+recognition.interimResults = true;
+recognition.continuous = true;
+
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const output = document.getElementById('output');
+const errorDiv = document.getElementById('error');
 
 recognition.onaudiostart = () => {
-  console.log('Audio capturing started');
+  output.innerText = 'Audio capturing started';
 };
 
 recognition.onresult = (event) => {
-  console.log('Result received: ', event.results);
+  let transcript = '';
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    transcript += event.results[i][0].transcript;
+  }
+  output.innerText = transcript;
 };
 
 recognition.onerror = (event) => {
-  console.error('Speech recognition error:', event.error);
+  errorDiv.innerText = `Error: ${event.error}`;
   if (event.error === 'language-not-supported') {
-    console.error('The selected language is not supported.');
+    errorDiv.innerText = 'Browser is not supported. Try latest version of Chrome';
   }
 };
 
 recognition.onend = () => {
-  console.log('Speech recognition disconnected');
+  if (startBtn.disabled) {
+    recognition.start();
+  } else {
+    output.innerText += 'Speech recognition disconnected.';
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
 };
 
 recognition.onaudioend = () => {
-  console.log('Audio capturing ended');
+  output.innerText += 'Audio capturing ended.';
 };
 
 recognition.onnomatch = () => {
-  console.log('No speech was recognized');
+  errorDiv.innerText = 'No speech was recognized.';
 };
 
-recognition.start();
+startBtn.addEventListener('click', () => {
+  output.innerText = '';
+  errorDiv.innerText = '';
+  recognition.start();
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+});
+
+stopBtn.addEventListener('click', () => {
+  recognition.stop();
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+});

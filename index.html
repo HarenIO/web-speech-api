@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Speech Api</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="index.js" defer></script>
-</head>
-<body>
-    
-</body>
+    <title>Speech</title>
+  </head>
+  <body>
+    <h2>Speech Recognition Demo</h2>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API">https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API</a>
+    <br><br>
+    <button id="startBtn">Start Recognition</button>
+    <button id="stopBtn" disabled>Stop Recognition</button>
+    <div id="output" aria-live="polite"></div>
+    <div id="error" aria-live="assertive"></div>
+  </body>
 </html>
